@@ -3,7 +3,8 @@ import Hexo from '../../../lib/hexo';
 import postPermalinkFilter from '../../../lib/plugins/filter/post_permalink';
 type PostPermalinkFilterParams = Parameters<typeof postPermalinkFilter>;
 type PostPermalinkFilterReturn = ReturnType<typeof postPermalinkFilter>;
-
+import chai from 'chai';
+const should = chai.should();
 describe('post_permalink', () => {
   const hexo = new Hexo();
   const postPermalink: (...args: PostPermalinkFilterParams) => PostPermalinkFilterReturn = postPermalinkFilter.bind(hexo);
@@ -99,15 +100,15 @@ describe('post_permalink', () => {
   it('timestamp', async () => {
     hexo.config.timezone = 'UTC';
     hexo.config.permalink = ':day/:hour/:timestamp/';
-    const date = moment('2025-01-09 22:45:14');
-    const timestamp = '1736433914';
+    const date = moment('2025-01-09 05:45:14');
+    const timestamp = '1736372714';
     const post = await Post.insert({
       source: 'sub/test-timestamp-post.md',
       slug: 'test-timestamp-post',
       title: 'My New Post',
       date: date
     });
-    postPermalink(post).should.eql(`09/22/${timestamp}/`);
+    postPermalink(post).should.eql(`09/05/${timestamp}/`);
     Post.removeById(post._id);
     hexo.config.timezone = '';
   });
