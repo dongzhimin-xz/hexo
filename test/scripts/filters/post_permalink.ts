@@ -96,6 +96,22 @@ describe('post_permalink', () => {
     Post.removeById(post._id);
   });
 
+  it('timestamp', async () => {
+    hexo.config.timezone = 'UTC';
+    hexo.config.permalink = ':day/:hour/:timestamp/';
+    const date = moment('2025-01-09 22:45:14');
+    const timestamp = '1736433914';
+    const post = await Post.insert({
+      source: 'sub/test-timestamp-post.md',
+      slug: 'test-timestamp-post',
+      title: 'My New Post',
+      date: date
+    });
+    postPermalink(post).should.eql(`09/22/${timestamp}/`);
+    Post.removeById(post._id);
+    hexo.config.timezone = '';
+  });
+
   it('time is omitted in front-matter', async () => {
     hexo.config.permalink = ':year/:month/:day/:hour/:minute/:second/:post_title/';
 
